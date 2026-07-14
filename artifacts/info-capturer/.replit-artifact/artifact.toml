@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Information Capturer"
+version = "1.0.0"
+id = "artifacts/info-capturer"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25920
+
+[services.development]
+run = "pnpm --filter @workspace/info-capturer run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/info-capturer", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/info-capturer/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25920"
+BASE_PATH = "/"

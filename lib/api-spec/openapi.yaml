@@ -10,6 +10,10 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Authentication
+  - name: visits
+    description: Visitor capture and retrieval
 paths:
   /healthz:
     get:
@@ -24,6 +28,157 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Admin login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResult"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResult"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Admin logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResult"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current session status
+      responses:
+        "200":
+          description: Session status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResult"
+
+  /visits:
+    post:
+      operationId: recordVisit
+      tags: [visits]
+      summary: Record a visitor's captured information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VisitInput"
+      responses:
+        "201":
+          description: Visit recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Visit"
+
+  /visits/usernames:
+    get:
+      operationId: listUsernames
+      tags: [visits]
+      summary: List all tracked usernames (admin only)
+      responses:
+        "200":
+          description: List of usernames with visit counts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UsernameStats"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResult"
+
+  /visits/{username}:
+    get:
+      operationId: getVisitsByUsername
+      tags: [visits]
+      summary: Get all visits for a username (admin only)
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of visits
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Visit"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResult"
+
+  /visits/{username}/{id}:
+    delete:
+      operationId: deleteVisit
+      tags: [visits]
+      summary: Delete a visit record (admin only)
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResult"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResult"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +189,137 @@ components:
       required:
         - status
 
+    ErrorResult:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    LoginInput:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+
+    LoginResult:
+      type: object
+      properties:
+        authenticated:
+          type: boolean
+      required:
+        - authenticated
+
+    UsernameStats:
+      type: object
+      properties:
+        username:
+          type: string
+        visitCount:
+          type: integer
+        lastVisit:
+          type: ["string", "null"]
+      required:
+        - username
+        - visitCount
+        - lastVisit
+
+    VisitInput:
+      type: object
+      properties:
+        username:
+          type: string
+        ua:
+          type: ["string", "null"]
+        platform:
+          type: ["string", "null"]
+        screenWidth:
+          type: ["integer", "null"]
+        screenHeight:
+          type: ["integer", "null"]
+        screenDpr:
+          type: ["number", "null"]
+        memoryGb:
+          type: ["number", "null"]
+        cpuCores:
+          type: ["integer", "null"]
+        touchPoints:
+          type: ["integer", "null"]
+        lang:
+          type: ["string", "null"]
+        batteryLevel:
+          type: ["number", "null"]
+        batteryCharging:
+          type: ["boolean", "null"]
+        networkType:
+          type: ["string", "null"]
+        networkDownlink:
+          type: ["number", "null"]
+        networkRtt:
+          type: ["number", "null"]
+      required:
+        - username
+
+    Visit:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        ip:
+          type: ["string", "null"]
+        isp:
+          type: ["string", "null"]
+        country:
+          type: ["string", "null"]
+        city:
+          type: ["string", "null"]
+        region:
+          type: ["string", "null"]
+        timezone:
+          type: ["string", "null"]
+        org:
+          type: ["string", "null"]
+        ua:
+          type: ["string", "null"]
+        platform:
+          type: ["string", "null"]
+        screenWidth:
+          type: ["integer", "null"]
+        screenHeight:
+          type: ["integer", "null"]
+        screenDpr:
+          type: ["number", "null"]
+        memoryGb:
+          type: ["number", "null"]
+        cpuCores:
+          type: ["integer", "null"]
+        touchPoints:
+          type: ["integer", "null"]
+        lang:
+          type: ["string", "null"]
+        batteryLevel:
+          type: ["number", "null"]
+        batteryCharging:
+          type: ["boolean", "null"]
+        networkType:
+          type: ["string", "null"]
+        networkDownlink:
+          type: ["number", "null"]
+        networkRtt:
+          type: ["number", "null"]
+        rawIpinfo:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required:
+        - id
+        - username
+        - createdAt
