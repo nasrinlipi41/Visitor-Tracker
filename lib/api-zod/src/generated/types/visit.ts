@@ -28,6 +28,20 @@ export interface Visit {
   /** @nullable */
   platform?: string | null;
   /** @nullable */
+  browserName?: string | null;
+  /** @nullable */
+  browserVersion?: string | null;
+  /** @nullable */
+  osName?: string | null;
+  /** @nullable */
+  osVersion?: string | null;
+  /** @nullable */
+  deviceModel?: string | null;
+  /** @nullable */
+  isMobile?: boolean | null;
+  /** @nullable */
+  architecture?: string | null;
+  /** @nullable */
   screenWidth?: number | null;
   /** @nullable */
   screenHeight?: number | null;

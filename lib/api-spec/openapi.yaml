@@ -239,6 +239,20 @@ components:
           type: ["string", "null"]
         platform:
           type: ["string", "null"]
+        browserName:
+          type: ["string", "null"]
+        browserVersion:
+          type: ["string", "null"]
+        osName:
+          type: ["string", "null"]
+        osVersion:
+          type: ["string", "null"]
+        deviceModel:
+          type: ["string", "null"]
+        isMobile:
+          type: ["boolean", "null"]
+        architecture:
+          type: ["string", "null"]
         screenWidth:
           type: ["integer", "null"]
         screenHeight:
@@ -290,6 +304,20 @@ components:
         ua:
           type: ["string", "null"]
         platform:
+          type: ["string", "null"]
+        browserName:
+          type: ["string", "null"]
+        browserVersion:
+          type: ["string", "null"]
+        osName:
+          type: ["string", "null"]
+        osVersion:
+          type: ["string", "null"]
+        deviceModel:
+          type: ["string", "null"]
+        isMobile:
+          type: ["boolean", "null"]
+        architecture:
           type: ["string", "null"]
         screenWidth:
           type: ["integer", "null"]

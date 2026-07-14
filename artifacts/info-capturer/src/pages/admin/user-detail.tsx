@@ -1,9 +1,162 @@
 import { useRoute, Link } from "wouter";
 import { AdminLayout } from "./dashboard";
 import { useGetVisitsByUsername, getGetVisitsByUsernameQueryKey, useDeleteVisit } from "@workspace/api-client-react";
-import { ChevronLeft, MapPin, Monitor, Battery, Activity, Trash2, Cpu, Globe, Info } from "lucide-react";
+import { ChevronLeft, MapPin, Monitor, Battery, Activity, Trash2, Cpu, Globe, Smartphone, Wifi } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
+import type { Visit } from "@workspace/api-client-react";
+
+function Row({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div className="flex items-start justify-between gap-3 py-1.5 border-b border-border/30 last:border-0">
+      <span className="text-muted-foreground text-xs shrink-0 w-28">{label}</span>
+      <span className="font-medium text-xs text-right break-all">{value ?? <span className="text-muted-foreground/50">—</span>}</span>
+    </div>
+  );
+}
+
+function Section({ icon: Icon, title, children }: { icon: React.ElementType; title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5 mb-3 pb-1.5 border-b border-border/50">
+        <Icon className="w-3 h-3" /> {title}
+      </h3>
+      <div>{children}</div>
+    </div>
+  );
+}
+
+function VisitCard({ visit, onDelete, isPending }: { visit: Visit; onDelete: () => void; isPending: boolean }) {
+  let lat: string | undefined, lon: string | undefined;
+  if (visit.rawIpinfo) {
+    try {
+      const ipData = JSON.parse(visit.rawIpinfo);
+      if (ipData.loc) [lat, lon] = ipData.loc.split(",");
+    } catch { /* ignore */ }
+  }
+
+  const batteryPct = visit.batteryLevel !== null && visit.batteryLevel !== undefined
+    ? Math.round(visit.batteryLevel * 100)
+    : null;
+
+  const screenLabel = visit.screenWidth && visit.screenHeight
+    ? `${visit.screenWidth}×${visit.screenHeight}${visit.screenDpr ? ` @${visit.screenDpr}x` : ""}`
+    : null;
+
+  const networkLabel = [
+    visit.networkType,
+    visit.networkDownlink != null ? `↓${visit.networkDownlink} Mbps` : null,
+    visit.networkRtt != null ? `RTT ${visit.networkRtt}ms` : null,
+  ].filter(Boolean).join(" · ") || null;
+
+  const browserLabel = [visit.browserName, visit.browserVersion].filter(Boolean).join(" ") || null;
+
+  const locationLabel = [visit.city, visit.region, visit.country].filter(Boolean).join(", ") || null;
+
+  return (
+    <div className="border border-border bg-card rounded-md overflow-hidden font-mono text-xs relative group">
+      {/* Header */}
+      <div className="bg-muted/20 border-b border-border px-4 py-2.5 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+            Record #{visit.id}
+          </span>
+          <span className="text-[10px] bg-background border border-border px-2 py-0.5 rounded text-muted-foreground">
+            {new Date(visit.createdAt).toLocaleString()}
+          </span>
+          {visit.isMobile && (
+            <span className="text-[10px] bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 rounded flex items-center gap-1">
+              <Smartphone className="w-2.5 h-2.5" /> Mobile
+            </span>
+          )}
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+          onClick={onDelete}
+          disabled={isPending}
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </Button>
+      </div>
+
+      {/* Body */}
+      <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Origin / IP */}
+        <Section icon={MapPin} title="Origin">
+          <Row label="IP" value={visit.ip} />
+          <Row label="ISP" value={visit.isp} />
+          <Row label="Location" value={locationLabel} />
+          <Row label="Country" value={visit.country} />
+          <Row label="Timezone" value={visit.timezone} />
+          {lat && lon && (
+            <div className="pt-1">
+              <a
+                href={`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=12/${lat}/${lon}`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[10px] uppercase text-primary hover:underline flex items-center gap-1"
+              >
+                <Globe className="w-2.5 h-2.5" /> View on map
+              </a>
+            </div>
+          )}
+        </Section>
+
+        {/* Browser & OS */}
+        <Section icon={Monitor} title="Browser & OS">
+          <Row label="Browser" value={browserLabel} />
+          <Row label="OS" value={[visit.osName, visit.osVersion].filter(Boolean).join(" ") || null} />
+          <Row label="Platform" value={visit.platform} />
+          <Row label="Architecture" value={visit.architecture} />
+          <Row label="Device" value={visit.deviceModel} />
+          <Row label="Language" value={visit.lang} />
+        </Section>
+
+        {/* Hardware */}
+        <Section icon={Cpu} title="Hardware">
+          <Row label="Screen" value={screenLabel} />
+          <Row label="Memory" value={visit.memoryGb != null ? `${visit.memoryGb} GB` : null} />
+          <Row label="CPU Cores" value={visit.cpuCores} />
+          <Row label="Touch Points" value={visit.touchPoints} />
+          <Row
+            label="Battery"
+            value={
+              batteryPct !== null ? (
+                <span className="flex items-center gap-1 justify-end">
+                  {batteryPct}%
+                  {visit.batteryCharging && (
+                    <Battery className="w-3 h-3 text-green-500" />
+                  )}
+                  {visit.batteryCharging ? " (Charging)" : " (Not charging)"}
+                </span>
+              ) : null
+            }
+          />
+          <Row
+            label="Network"
+            value={networkLabel ? (
+              <span className="flex items-center gap-1 justify-end">
+                <Wifi className="w-3 h-3 opacity-60" /> {networkLabel}
+              </span>
+            ) : null}
+          />
+        </Section>
+      </div>
+
+      {/* Raw UA string */}
+      <div className="px-4 py-3 bg-muted/10 border-t border-border/50">
+        <div className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1.5">
+          User Agent String
+        </div>
+        <div className="text-[11px] text-foreground/80 break-all bg-background/60 p-2 rounded border border-border/40 leading-relaxed">
+          {visit.ua || <span className="text-muted-foreground/50">Unknown</span>}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function AdminUserDetail() {
   const [, params] = useRoute("/admin/dashboard/:username");
@@ -11,7 +164,7 @@ export default function AdminUserDetail() {
   const queryClient = useQueryClient();
 
   const { data: visits, isLoading } = useGetVisitsByUsername(username, {
-    query: { queryKey: getGetVisitsByUsernameQueryKey(username), enabled: !!username }
+    query: { queryKey: getGetVisitsByUsernameQueryKey(username), enabled: !!username },
   });
 
   const deleteMutation = useDeleteVisit();
@@ -22,17 +175,13 @@ export default function AdminUserDetail() {
       { username, id },
       {
         onSuccess: () => {
-          queryClient.setQueryData(getGetVisitsByUsernameQueryKey(username), (old: any) => 
-            old ? old.filter((v: any) => v.id !== id) : old
+          queryClient.setQueryData(
+            getGetVisitsByUsernameQueryKey(username),
+            (old: Visit[] | undefined) => (old ? old.filter((v) => v.id !== id) : old)
           );
-        }
+        },
       }
     );
-  };
-
-  const getMapUrl = (lat?: string, lon?: string) => {
-    if (!lat || !lon) return null;
-    return `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=12/${lat}/${lon}`;
   };
 
   return (
@@ -44,10 +193,15 @@ export default function AdminUserDetail() {
               <ChevronLeft className="w-3 h-3" /> Back
             </Button>
           </Link>
-          <div className="h-4 w-px bg-border"></div>
+          <div className="h-4 w-px bg-border" />
           <h1 className="text-xl font-mono font-bold tracking-tight flex items-center gap-2">
             Target: <span className="text-primary">{username}</span>
           </h1>
+          {visits && (
+            <span className="text-xs text-muted-foreground font-mono">
+              {visits.length} record{visits.length !== 1 ? "s" : ""}
+            </span>
+          )}
         </div>
 
         {isLoading ? (
@@ -59,109 +213,15 @@ export default function AdminUserDetail() {
             No records found for this target.
           </div>
         ) : (
-          <div className="space-y-6">
-            {visits.map((visit) => {
-              // Parse basic loc if rawIpinfo is present and has loc field
-              let lat, lon;
-              if (visit.rawIpinfo) {
-                try {
-                  const ipData = JSON.parse(visit.rawIpinfo);
-                  if (ipData.loc) {
-                    [lat, lon] = ipData.loc.split(',');
-                  }
-                } catch (e) {}
-              }
-
-              return (
-                <div key={visit.id} className="border border-border bg-card rounded-md shadow-sm overflow-hidden flex flex-col font-mono text-sm relative group">
-                  <div className="bg-muted/30 border-b border-border px-4 py-3 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Record #{visit.id}</span>
-                      <span className="text-xs bg-background border border-border px-2 py-0.5 rounded text-muted-foreground">
-                        {new Date(visit.createdAt).toLocaleString()}
-                      </span>
-                    </div>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-7 w-7 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => handleDelete(visit.id)}
-                      disabled={deleteMutation.isPending}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                  
-                  <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {/* Location & Network */}
-                    <div className="space-y-4">
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground border-b border-border/50 pb-2 mb-3 flex items-center gap-2">
-                        <MapPin className="w-3 h-3" /> Origin
-                      </h3>
-                      <div className="space-y-2 text-xs">
-                        <div className="flex justify-between"><span className="text-muted-foreground">IP</span> <span className="font-medium text-foreground">{visit.ip || 'Unknown'}</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">ISP</span> <span className="font-medium truncate max-w-[180px]" title={visit.isp || ''}>{visit.isp || 'Unknown'}</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Location</span> <span className="font-medium text-right">{visit.city ? `${visit.city}, ` : ''}{visit.region ? `${visit.region}, ` : ''}{visit.country || 'Unknown'}</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Timezone</span> <span className="font-medium">{visit.timezone || 'Unknown'}</span></div>
-                        {lat && lon && (
-                          <div className="mt-2 text-right">
-                            <a href={getMapUrl(lat, lon)!} target="_blank" rel="noreferrer" className="text-[10px] uppercase text-primary hover:underline flex items-center justify-end gap-1">
-                              <Globe className="w-3 h-3" /> View Coordinates
-                            </a>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Device & Screen */}
-                    <div className="space-y-4">
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground border-b border-border/50 pb-2 mb-3 flex items-center gap-2">
-                        <Monitor className="w-3 h-3" /> Hardware
-                      </h3>
-                      <div className="space-y-2 text-xs">
-                        <div className="flex justify-between"><span className="text-muted-foreground">Platform</span> <span className="font-medium">{visit.platform || 'Unknown'}</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Screen</span> <span className="font-medium">{visit.screenWidth && visit.screenHeight ? `${visit.screenWidth}x${visit.screenHeight} (x${visit.screenDpr || 1})` : 'Unknown'}</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Touch Points</span> <span className="font-medium">{visit.touchPoints !== null ? visit.touchPoints : 'Unknown'}</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Language</span> <span className="font-medium">{visit.lang || 'Unknown'}</span></div>
-                      </div>
-                    </div>
-
-                    {/* Internals */}
-                    <div className="space-y-4">
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground border-b border-border/50 pb-2 mb-3 flex items-center gap-2">
-                        <Cpu className="w-3 h-3" /> Internals
-                      </h3>
-                      <div className="space-y-2 text-xs">
-                        <div className="flex justify-between"><span className="text-muted-foreground">CPU Cores</span> <span className="font-medium">{visit.cpuCores || 'Unknown'}</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Memory</span> <span className="font-medium">{visit.memoryGb ? `${visit.memoryGb} GB` : 'Unknown'}</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Battery</span> 
-                          <span className="font-medium flex items-center gap-1">
-                            {visit.batteryLevel !== null ? `${Math.round(visit.batteryLevel * 100)}%` : 'Unknown'}
-                            {visit.batteryCharging && <Battery className="w-3 h-3 text-green-500" />}
-                          </span>
-                        </div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Connection</span> 
-                          <span className="font-medium flex items-center gap-1">
-                            {visit.networkType || 'Unknown'} 
-                            {visit.networkDownlink && ` (${visit.networkDownlink}Mbps)`}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="px-4 py-3 bg-muted/10 border-t border-border/50">
-                    <div className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1">
-                      <Info className="w-3 h-3" /> User Agent
-                    </div>
-                    <div className="text-xs text-foreground font-mono break-all bg-background p-2 rounded border border-border/50">
-                      {visit.ua || 'Unknown'}
-                    </div>
-                  </div>
-
-                </div>
-              );
-            })}
+          <div className="space-y-5">
+            {visits.map((visit) => (
+              <VisitCard
+                key={visit.id}
+                visit={visit}
+                onDelete={() => handleDelete(visit.id)}
+                isPending={deleteMutation.isPending}
+              />
+            ))}
           </div>
         )}
       </div>
