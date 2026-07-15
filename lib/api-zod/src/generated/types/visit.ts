@@ -40,8 +40,6 @@ export interface Visit {
   /** @nullable */
   isMobile?: boolean | null;
   /** @nullable */
-  architecture?: string | null;
-  /** @nullable */
   screenWidth?: number | null;
   /** @nullable */
   screenHeight?: number | null;

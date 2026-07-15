@@ -76,7 +76,6 @@ router.post("/visits", async (req, res): Promise<void> => {
       osVersion: data.osVersion ?? null,
       deviceModel: data.deviceModel ?? null,
       isMobile: data.isMobile ?? null,
-      architecture: data.architecture ?? null,
       screenWidth: data.screenWidth ?? null,
       screenHeight: data.screenHeight ?? null,
       screenDpr: data.screenDpr ?? null,

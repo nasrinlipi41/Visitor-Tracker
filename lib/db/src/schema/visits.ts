@@ -20,7 +20,6 @@ export const visitsTable = pgTable("visits", {
   osVersion: text("os_version"),
   deviceModel: text("device_model"),
   isMobile: boolean("is_mobile"),
-  architecture: text("architecture"),
   screenWidth: integer("screen_width"),
   screenHeight: integer("screen_height"),
   screenDpr: real("screen_dpr"),

@@ -113,7 +113,6 @@ export default function VisitorPage() {
       let osVersion = parsed.osVersion;
       let deviceModel = parsed.deviceModel;
       let isMobile = parsed.isMobile;
-      let architecture: string | null = null;
       let platform = parsed.platform;
 
       // --- Use UA-CH (User Agent Client Hints) if available — much more accurate ---
@@ -152,14 +151,14 @@ export default function VisitorPage() {
           // Accurate OS platform and version from UA-CH
           if (high.platform) osName = high.platform;
           if (high.platformVersion) osVersion = high.platformVersion;
-          if (high.architecture) architecture = high.architecture;
+
           if (high.model) deviceModel = high.model || null;
           if (typeof high.mobile === "boolean") isMobile = high.mobile;
 
           // Rebuild platform string from UA-CH data
           const caParts: string[] = [];
           if (osName) caParts.push(osName + (osVersion ? ` ${osVersion}` : ""));
-          if (architecture) caParts.push(architecture);
+
           if (deviceModel) caParts.push(deviceModel);
           if (caParts.length > 0) platform = caParts.join(" · ");
         } catch {
@@ -177,7 +176,6 @@ export default function VisitorPage() {
         osVersion,
         deviceModel: deviceModel || null,
         isMobile,
-        architecture: architecture || null,
         deviceTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         screenWidth: window.screen.width,
         screenHeight: window.screen.height,
@@ -233,6 +231,12 @@ export default function VisitorPage() {
           System is operating normally. All services are currently active and available.
         </p>
       </div>
+      <a
+        href="/admin"
+        className="fixed bottom-5 right-5 text-[11px] text-gray-300 hover:text-gray-500 transition-colors select-none"
+      >
+        Admin
+      </a>
     </div>
   );
 }

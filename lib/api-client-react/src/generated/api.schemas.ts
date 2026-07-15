@@ -48,8 +48,6 @@ export interface VisitInput {
   /** @nullable */
   isMobile?: boolean | null;
   /** @nullable */
-  architecture?: string | null;
-  /** @nullable */
   deviceTimezone?: string | null;
   /** @nullable */
   screenWidth?: number | null;
@@ -110,8 +108,6 @@ export interface Visit {
   deviceModel?: string | null;
   /** @nullable */
   isMobile?: boolean | null;
-  /** @nullable */
-  architecture?: string | null;
   /** @nullable */
   screenWidth?: number | null;
   /** @nullable */

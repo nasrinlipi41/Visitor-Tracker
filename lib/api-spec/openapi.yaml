@@ -251,8 +251,6 @@ components:
           type: ["string", "null"]
         isMobile:
           type: ["boolean", "null"]
-        architecture:
-          type: ["string", "null"]
         deviceTimezone:
           type: ["string", "null"]
         screenWidth:
@@ -319,8 +317,6 @@ components:
           type: ["string", "null"]
         isMobile:
           type: ["boolean", "null"]
-        architecture:
-          type: ["string", "null"]
         screenWidth:
           type: ["integer", "null"]
         screenHeight:
