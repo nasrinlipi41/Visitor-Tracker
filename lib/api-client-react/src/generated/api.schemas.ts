@@ -50,6 +50,8 @@ export interface VisitInput {
   /** @nullable */
   architecture?: string | null;
   /** @nullable */
+  deviceTimezone?: string | null;
+  /** @nullable */
   screenWidth?: number | null;
   /** @nullable */
   screenHeight?: number | null;

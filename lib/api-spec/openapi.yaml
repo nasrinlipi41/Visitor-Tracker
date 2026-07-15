@@ -253,6 +253,8 @@ components:
           type: ["boolean", "null"]
         architecture:
           type: ["string", "null"]
+        deviceTimezone:
+          type: ["string", "null"]
         screenWidth:
           type: ["integer", "null"]
         screenHeight:

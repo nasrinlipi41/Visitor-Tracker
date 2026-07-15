@@ -49,7 +49,7 @@ router.post("/visits", async (req, res): Promise<void> => {
         country = ipData.country_name || ipData.country || null;
         city = ipData.city || null;
         region = ipData.region || null;
-        timezone = ipData.timezone || null;
+        timezone = ipData.timezone || data.deviceTimezone || null;
         org = ipData.org || null;
       }
     } catch {

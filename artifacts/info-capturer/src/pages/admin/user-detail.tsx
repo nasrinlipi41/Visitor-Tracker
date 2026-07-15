@@ -7,10 +7,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { Visit } from "@workspace/api-client-react";
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
+  if (value === null || value === undefined || value === "") return null;
   return (
     <div className="flex items-start justify-between gap-3 py-1.5 border-b border-border/30 last:border-0">
       <span className="text-muted-foreground text-xs shrink-0 w-28">{label}</span>
-      <span className="font-medium text-xs text-right break-all">{value ?? <span className="text-muted-foreground/50">—</span>}</span>
+      <span className="font-medium text-xs text-right break-all">{value}</span>
     </div>
   );
 }
@@ -145,15 +146,6 @@ function VisitCard({ visit, onDelete, isPending }: { visit: Visit; onDelete: () 
         </Section>
       </div>
 
-      {/* Raw UA string */}
-      <div className="px-4 py-3 bg-muted/10 border-t border-border/50">
-        <div className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1.5">
-          User Agent String
-        </div>
-        <div className="text-[11px] text-foreground/80 break-all bg-background/60 p-2 rounded border border-border/40 leading-relaxed">
-          {visit.ua || <span className="text-muted-foreground/50">Unknown</span>}
-        </div>
-      </div>
     </div>
   );
 }

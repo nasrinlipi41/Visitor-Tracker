@@ -60,6 +60,7 @@ export const RecordVisitBody = zod.object({
   "deviceModel": zod.string().nullish(),
   "isMobile": zod.boolean().nullish(),
   "architecture": zod.string().nullish(),
+  "deviceTimezone": zod.string().nullish(),
   "screenWidth": zod.number().nullish(),
   "screenHeight": zod.number().nullish(),
   "screenDpr": zod.number().nullish(),
