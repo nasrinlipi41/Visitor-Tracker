@@ -122,9 +122,7 @@ export default function VisitorPage() {
           const high = await uaData.getHighEntropyValues([
             "platform",
             "platformVersion",
-            "architecture",
             "model",
-            "uaFullVersion",
             "fullVersionList",
             "mobile",
           ]);
@@ -150,7 +148,16 @@ export default function VisitorPage() {
 
           // Accurate OS platform and version from UA-CH
           if (high.platform) osName = high.platform;
-          if (high.platformVersion) osVersion = high.platformVersion;
+          if (high.platformVersion) {
+            if (high.platform === "Windows") {
+              // UA-CH returns internal NT build major versions for Windows:
+              // major >= 13 → Windows 11, major 1–12 → Windows 10, 0.x → older
+              const major = parseInt(high.platformVersion.split(".")[0], 10);
+              osVersion = major >= 13 ? "11" : major >= 1 ? "10" : osVersion;
+            } else {
+              osVersion = high.platformVersion;
+            }
+          }
 
           if (high.model) deviceModel = high.model || null;
           if (typeof high.mobile === "boolean") isMobile = high.mobile;
