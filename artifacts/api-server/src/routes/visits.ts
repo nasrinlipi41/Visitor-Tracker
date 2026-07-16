@@ -69,7 +69,6 @@ router.post("/visits", async (req, res): Promise<void> => {
       timezone,
       org,
       ua: data.ua ?? null,
-      platform: data.platform ?? null,
       browserName: data.browserName ?? null,
       browserVersion: data.browserVersion ?? null,
       osName: data.osName ?? null,

@@ -26,8 +26,6 @@ export interface Visit {
   /** @nullable */
   ua?: string | null;
   /** @nullable */
-  platform?: string | null;
-  /** @nullable */
   browserName?: string | null;
   /** @nullable */
   browserVersion?: string | null;

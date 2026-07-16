@@ -34,8 +34,6 @@ export interface VisitInput {
   /** @nullable */
   ua?: string | null;
   /** @nullable */
-  platform?: string | null;
-  /** @nullable */
   browserName?: string | null;
   /** @nullable */
   browserVersion?: string | null;
@@ -94,8 +92,6 @@ export interface Visit {
   org?: string | null;
   /** @nullable */
   ua?: string | null;
-  /** @nullable */
-  platform?: string | null;
   /** @nullable */
   browserName?: string | null;
   /** @nullable */

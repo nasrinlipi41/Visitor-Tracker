@@ -109,7 +109,7 @@ function VisitCard({ visit, onDelete, isPending }: { visit: Visit; onDelete: () 
         <Section icon={Monitor} title="Browser & OS">
           <Row label="Browser" value={browserLabel} />
           <Row label="OS" value={[visit.osName, visit.osVersion].filter(Boolean).join(" ") || null} />
-          <Row label="Platform" value={visit.platform} />
+
           <Row label="Device" value={visit.deviceModel} />
           <Row label="Language" value={visit.lang} />
         </Section>

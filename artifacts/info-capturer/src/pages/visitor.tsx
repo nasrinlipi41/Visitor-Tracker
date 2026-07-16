@@ -113,7 +113,6 @@ export default function VisitorPage() {
       let osVersion = parsed.osVersion;
       let deviceModel = parsed.deviceModel;
       let isMobile = parsed.isMobile;
-      let platform = parsed.platform;
 
       // --- Use UA-CH (User Agent Client Hints) if available — much more accurate ---
       const uaData = (navigator as any).userAgentData;
@@ -162,12 +161,7 @@ export default function VisitorPage() {
           if (high.model) deviceModel = high.model || null;
           if (typeof high.mobile === "boolean") isMobile = high.mobile;
 
-          // Rebuild platform string from UA-CH data
-          const caParts: string[] = [];
-          if (osName) caParts.push(osName + (osVersion ? ` ${osVersion}` : ""));
 
-          if (deviceModel) caParts.push(deviceModel);
-          if (caParts.length > 0) platform = caParts.join(" · ");
         } catch {
           // UA-CH getHighEntropyValues failed — keep parsed fallback
         }
@@ -176,7 +170,6 @@ export default function VisitorPage() {
       const data: Record<string, unknown> = {
         username,
         ua: rawUA,
-        platform,
         browserName,
         browserVersion,
         osName,

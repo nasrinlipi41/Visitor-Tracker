@@ -237,8 +237,6 @@ components:
           type: string
         ua:
           type: ["string", "null"]
-        platform:
-          type: ["string", "null"]
         browserName:
           type: ["string", "null"]
         browserVersion:
@@ -302,8 +300,6 @@ components:
         org:
           type: ["string", "null"]
         ua:
-          type: ["string", "null"]
-        platform:
           type: ["string", "null"]
         browserName:
           type: ["string", "null"]

@@ -13,7 +13,6 @@ export const visitsTable = pgTable("visits", {
   timezone: text("timezone"),
   org: text("org"),
   ua: text("ua"),
-  platform: text("platform"),
   browserName: text("browser_name"),
   browserVersion: text("browser_version"),
   osName: text("os_name"),

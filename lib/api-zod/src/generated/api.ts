@@ -52,7 +52,6 @@ export const GetMeResponse = zod.object({
 export const RecordVisitBody = zod.object({
   "username": zod.string(),
   "ua": zod.string().nullish(),
-  "platform": zod.string().nullish(),
   "browserName": zod.string().nullish(),
   "browserVersion": zod.string().nullish(),
   "osName": zod.string().nullish(),
@@ -85,7 +84,6 @@ export const RecordVisitResponse = zod.object({
   "timezone": zod.string().nullish(),
   "org": zod.string().nullish(),
   "ua": zod.string().nullish(),
-  "platform": zod.string().nullish(),
   "browserName": zod.string().nullish(),
   "browserVersion": zod.string().nullish(),
   "osName": zod.string().nullish(),
@@ -138,7 +136,6 @@ export const GetVisitsByUsernameResponseItem = zod.object({
   "timezone": zod.string().nullish(),
   "org": zod.string().nullish(),
   "ua": zod.string().nullish(),
-  "platform": zod.string().nullish(),
   "browserName": zod.string().nullish(),
   "browserVersion": zod.string().nullish(),
   "osName": zod.string().nullish(),
