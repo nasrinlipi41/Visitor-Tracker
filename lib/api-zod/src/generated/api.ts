@@ -70,7 +70,10 @@ export const RecordVisitBody = zod.object({
   "batteryCharging": zod.boolean().nullish(),
   "networkType": zod.string().nullish(),
   "networkDownlink": zod.number().nullish(),
-  "networkRtt": zod.number().nullish()
+  "networkRtt": zod.number().nullish(),
+  "latitude": zod.number().nullish(),
+  "longitude": zod.number().nullish(),
+  "locationAccuracy": zod.number().nullish()
 })
 
 export const RecordVisitResponse = zod.object({
@@ -102,6 +105,9 @@ export const RecordVisitResponse = zod.object({
   "networkType": zod.string().nullish(),
   "networkDownlink": zod.number().nullish(),
   "networkRtt": zod.number().nullish(),
+  "latitude": zod.number().nullish(),
+  "longitude": zod.number().nullish(),
+  "locationAccuracy": zod.number().nullish(),
   "rawIpinfo": zod.string().nullish(),
   "createdAt": zod.string()
 })
@@ -154,6 +160,9 @@ export const GetVisitsByUsernameResponseItem = zod.object({
   "networkType": zod.string().nullish(),
   "networkDownlink": zod.number().nullish(),
   "networkRtt": zod.number().nullish(),
+  "latitude": zod.number().nullish(),
+  "longitude": zod.number().nullish(),
+  "locationAccuracy": zod.number().nullish(),
   "rawIpinfo": zod.string().nullish(),
   "createdAt": zod.string()
 })

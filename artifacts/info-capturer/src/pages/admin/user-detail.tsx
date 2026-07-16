@@ -91,7 +91,37 @@ function VisitCard({ visit, onDelete, isPending }: { visit: Visit; onDelete: () 
           <Row label="Location" value={locationLabel} />
           <Row label="Country" value={visit.country} />
           <Row label="Timezone" value={visit.timezone} />
-          {lat && lon && (
+          {visit.latitude != null && visit.longitude != null && (
+            <>
+              <Row
+                label="GPS Coords"
+                value={`${visit.latitude.toFixed(6)}, ${visit.longitude.toFixed(6)}`}
+              />
+              <Row
+                label="Accuracy"
+                value={visit.locationAccuracy != null ? `±${Math.round(visit.locationAccuracy)} m` : null}
+              />
+              <div className="pt-1 flex gap-3">
+                <a
+                  href={`https://www.google.com/maps?q=${visit.latitude},${visit.longitude}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[10px] uppercase text-primary hover:underline flex items-center gap-1"
+                >
+                  <Globe className="w-2.5 h-2.5" /> Google Maps
+                </a>
+                <a
+                  href={`https://www.openstreetmap.org/?mlat=${visit.latitude}&mlon=${visit.longitude}#map=15/${visit.latitude}/${visit.longitude}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[10px] uppercase text-primary hover:underline flex items-center gap-1"
+                >
+                  <Globe className="w-2.5 h-2.5" /> OpenStreetMap
+                </a>
+              </div>
+            </>
+          )}
+          {lat && lon && visit.latitude == null && (
             <div className="pt-1">
               <a
                 href={`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=12/${lat}/${lon}`}
@@ -99,7 +129,7 @@ function VisitCard({ visit, onDelete, isPending }: { visit: Visit; onDelete: () 
                 rel="noreferrer"
                 className="text-[10px] uppercase text-primary hover:underline flex items-center gap-1"
               >
-                <Globe className="w-2.5 h-2.5" /> View on map
+                <Globe className="w-2.5 h-2.5" /> IP-based map
               </a>
             </div>
           )}

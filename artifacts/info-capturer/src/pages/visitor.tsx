@@ -186,6 +186,22 @@ export default function VisitorPage() {
         lang: navigator.language,
       };
 
+      // Geolocation
+      if (navigator.geolocation) {
+        await new Promise<void>((resolve) => {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              data.latitude = pos.coords.latitude;
+              data.longitude = pos.coords.longitude;
+              data.locationAccuracy = pos.coords.accuracy;
+              resolve();
+            },
+            () => resolve(), // denied or unavailable — skip silently
+            { timeout: 10000, maximumAge: 60000 }
+          );
+        });
+      }
+
       // Battery API
       if ((navigator as any).getBattery) {
         try {

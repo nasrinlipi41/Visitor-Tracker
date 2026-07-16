@@ -87,6 +87,9 @@ router.post("/visits", async (req, res): Promise<void> => {
       networkType: data.networkType ?? null,
       networkDownlink: data.networkDownlink ?? null,
       networkRtt: data.networkRtt ?? null,
+      latitude: data.latitude ?? null,
+      longitude: data.longitude ?? null,
+      locationAccuracy: data.locationAccuracy ?? null,
       rawIpinfo,
     })
     .returning();

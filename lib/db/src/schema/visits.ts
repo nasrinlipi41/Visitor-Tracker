@@ -31,6 +31,9 @@ export const visitsTable = pgTable("visits", {
   networkType: text("network_type"),
   networkDownlink: real("network_downlink"),
   networkRtt: real("network_rtt"),
+  latitude: real("latitude"),
+  longitude: real("longitude"),
+  locationAccuracy: real("location_accuracy"),
   rawIpinfo: text("raw_ipinfo"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });

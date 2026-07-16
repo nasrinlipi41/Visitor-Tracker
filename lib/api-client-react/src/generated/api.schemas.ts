@@ -71,6 +71,12 @@ export interface VisitInput {
   networkDownlink?: number | null;
   /** @nullable */
   networkRtt?: number | null;
+  /** @nullable */
+  latitude?: number | null;
+  /** @nullable */
+  longitude?: number | null;
+  /** @nullable */
+  locationAccuracy?: number | null;
 }
 
 export interface Visit {
@@ -128,6 +134,12 @@ export interface Visit {
   networkDownlink?: number | null;
   /** @nullable */
   networkRtt?: number | null;
+  /** @nullable */
+  latitude?: number | null;
+  /** @nullable */
+  longitude?: number | null;
+  /** @nullable */
+  locationAccuracy?: number | null;
   /** @nullable */
   rawIpinfo?: string | null;
   createdAt: string;

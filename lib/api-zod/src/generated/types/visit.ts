@@ -62,6 +62,12 @@ export interface Visit {
   /** @nullable */
   networkRtt?: number | null;
   /** @nullable */
+  latitude?: number | null;
+  /** @nullable */
+  longitude?: number | null;
+  /** @nullable */
+  locationAccuracy?: number | null;
+  /** @nullable */
   rawIpinfo?: string | null;
   createdAt: string;
 }

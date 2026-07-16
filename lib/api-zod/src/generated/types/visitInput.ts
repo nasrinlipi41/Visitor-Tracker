@@ -48,4 +48,10 @@ export interface VisitInput {
   networkDownlink?: number | null;
   /** @nullable */
   networkRtt?: number | null;
+  /** @nullable */
+  latitude?: number | null;
+  /** @nullable */
+  longitude?: number | null;
+  /** @nullable */
+  locationAccuracy?: number | null;
 }

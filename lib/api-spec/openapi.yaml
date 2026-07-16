@@ -275,6 +275,12 @@ components:
           type: ["number", "null"]
         networkRtt:
           type: ["number", "null"]
+        latitude:
+          type: ["number", "null"]
+        longitude:
+          type: ["number", "null"]
+        locationAccuracy:
+          type: ["number", "null"]
       required:
         - username
 
@@ -336,6 +342,12 @@ components:
         networkDownlink:
           type: ["number", "null"]
         networkRtt:
+          type: ["number", "null"]
+        latitude:
+          type: ["number", "null"]
+        longitude:
+          type: ["number", "null"]
+        locationAccuracy:
           type: ["number", "null"]
         rawIpinfo:
           type: ["string", "null"]
