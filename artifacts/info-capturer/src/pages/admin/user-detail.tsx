@@ -52,7 +52,7 @@ function VisitCard({ visit, onDelete, isPending }: { visit: Visit; onDelete: () 
 
   const browserLabel = [visit.browserName, visit.browserVersion].filter(Boolean).join(" ") || null;
 
-  const locationLabel = [visit.city, visit.region].filter(Boolean).join(", ") || null;
+  const locationLabel = [visit.city, visit.region, visit.country].filter(Boolean).join(", ") || null;
 
   return (
     <div className="border border-border bg-card rounded-md overflow-hidden font-mono text-xs relative group">

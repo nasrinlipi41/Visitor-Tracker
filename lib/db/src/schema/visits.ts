@@ -7,6 +7,7 @@ export const visitsTable = pgTable("visits", {
   username: text("username").notNull(),
   ip: text("ip"),
   isp: text("isp"),
+  country: text("country"),
   city: text("city"),
   region: text("region"),
   timezone: text("timezone"),
