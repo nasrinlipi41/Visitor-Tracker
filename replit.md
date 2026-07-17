@@ -1,15 +1,17 @@
-# [Project name]
+# Information Capturer
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A visitor tracking tool that captures device, browser, network, and location data from visitors, with an admin dashboard to review collected profiles.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- **Frontend** — managed workflow `artifacts/info-capturer: web` (port 5000, preview at `/`)
+- **API server** — managed workflow `artifacts/api-server: API Server` (port 8080, preview at `/api`)
+- `pnpm --filter @workspace/api-server run dev` — run the API server manually
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- `DATABASE_URL` — auto-provided by Replit's built-in PostgreSQL (no setup needed)
 
 ## Stack
 
