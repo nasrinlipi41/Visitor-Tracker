@@ -87,8 +87,6 @@ export interface Visit {
   /** @nullable */
   isp?: string | null;
   /** @nullable */
-  country?: string | null;
-  /** @nullable */
   city?: string | null;
   /** @nullable */
   region?: string | null;

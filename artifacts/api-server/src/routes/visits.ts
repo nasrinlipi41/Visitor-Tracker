@@ -32,7 +32,7 @@ router.post("/visits", async (req, res): Promise<void> => {
 
   // Fetch IP info from ipinfo.io
   let isp: string | null = null;
-  let country: string | null = null;
+
   let city: string | null = null;
   let region: string | null = null;
   let timezone: string | null = null;
@@ -46,7 +46,6 @@ router.post("/visits", async (req, res): Promise<void> => {
         const ipData = await ipInfoRes.json() as Record<string, string>;
         rawIpinfo = JSON.stringify(ipData);
         isp = ipData.as_name || ipData.org || null;
-        country = ipData.country_name || ipData.country || null;
         city = ipData.city || null;
         region = ipData.region || null;
         timezone = ipData.timezone || data.deviceTimezone || null;
@@ -63,7 +62,6 @@ router.post("/visits", async (req, res): Promise<void> => {
       username: data.username,
       ip,
       isp,
-      country,
       city,
       region,
       timezone,

@@ -295,8 +295,6 @@ components:
           type: ["string", "null"]
         isp:
           type: ["string", "null"]
-        country:
-          type: ["string", "null"]
         city:
           type: ["string", "null"]
         region:
